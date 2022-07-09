@@ -1,3 +1,10 @@
+/*
+ *  Created on:   03/07/22
+ *  Last update:  09/07/22
+ *  author:       massiAvg
+ */
+
+
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <NTPClient.h>
@@ -9,8 +16,8 @@ char* topic= "myTopic/massiAvg"; // Definisco il topic
 
 
 // L'SSID e la Password  vanno modificati per la propria rete.
-const char* ssid = "TIM-46474485";
-const char* password = "6AcfE59DSt5kQCkDE7XHy5At";
+const char* ssid = "WiFSSID";
+const char* password = "Wifi Pass";
 const char* mqtt_server = "broker.hivemq.com"; //broker pubblico 
 #define mqtt_port 1883
 #define MQTT_USER ""
