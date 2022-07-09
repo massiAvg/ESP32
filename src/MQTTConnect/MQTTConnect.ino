@@ -20,8 +20,8 @@ String topic = "myTopic/massiAvg";
 StaticJsonDocument<200> msg;
 
 EspMQTTClient client(
-  "TIM-46474485",
-  "6AcfE59DSt5kQCkDE7XHy5At",
+  "WiFi",
+  "WiFiPass",
   "broker.hivemq.com",  // MQTT Broker server ip
   "MQTTUsername",       // Can be omitted if not needed
   "MQTTPassword",       // Can be omitted if not needed
@@ -39,24 +39,30 @@ void setup()
   //client.enableLastWillMessage("TestClient/lastwill", "I am going offline");  // You can activate the retain flag by setting the third parameter to true
   
   timeClient.setTimeOffset(GMT(NOT_SOLAR_TIME));
+
 }
 
 // This function is called once everything is connected (Wifi and MQTT)
 // WARNING : YOU MUST IMPLEMENT IT IF YOU USE EspMQTTClient
 void onConnectionEstablished()
 {
-  while(!timeClient.update())
+  /*while(!timeClient.update())
   {
     timeClient.forceUpdate();
-  }
+  }*/
   // Subscribe to "mytopic/test" and display received message to Serial
   client.subscribe(topic, [](const String & payload) {
     if(payload != NULL && flagPubFromSerial == 0)
     {
+      while(!timeClient.update())
+      {
+        timeClient.forceUpdate();
+      }
       
       String timeNow2 = timeClient.getFullFormattedTime();
+
       msg["message"]=payload;
-      msg["time"] = timeNow2;
+      //msg["time"] = timeNow2;
 
       serializeJsonPretty(msg,Serial); 
     }
@@ -67,7 +73,7 @@ void loop()
 {
   String messagetopub=Serial.readString();  
   client.loop();
-  delay(2);
+  delay(1);
 
   if(messagetopub!= NULL )
   {
@@ -80,7 +86,7 @@ void loop()
     client.publish(topic, messagetopub);
     //client.unsubscribe(topic);
     msg["message"]=messagetopub;
-    msg["time"] = timeNow;
+    //msg["time"] = timeNow;
 
     flagPubFromSerial = 1;
 
